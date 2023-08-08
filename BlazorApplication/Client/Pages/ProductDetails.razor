@@ -1,4 +1,4 @@
-﻿@page "/product/{id}"
+﻿@page "/product/{id:int}"
 @using BlazorApplication.Client.Services.ProductService;
 @using BlazorApplication.Shared;
 @inject IProductService ProductService
@@ -20,18 +20,13 @@
 </div>
 
 @code {
-	private Product? product = null;
+	private Product? product = new();
 
 	[Parameter]
-	public string Id { get; set; }
+	public int Id { get; set; }
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
-		if (ProductService.Products is null || ProductService.Products.Count == 0)
-		{
-			ProductService.LoadProducts();
-		}
-
-		product = ProductService.Products!.FirstOrDefault(product => product.Id == int.Parse(Id));
+		product = await ProductService.GetProduct(Id);
 	}
 }
