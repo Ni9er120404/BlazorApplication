@@ -1,37 +1,22 @@
 ﻿using BlazorApplication.Shared;
+using System.Net.Http.Json;
 
 namespace BlazorApplication.Client.Services.CategoryService
 {
 	public class CategoryService : ICategoryService
 	{
-		public List<Category> Categories { get; set; } = new();
+		private readonly HttpClient _httpClient;
 
-		public void LoadCategories()
+		public List<Category>? Categories { get; set; } = new();
+
+		public CategoryService(HttpClient httpClient)
 		{
-			Categories = new List<Category>()
-			{
-				new Category()
-				{
-					Id=1,
-					Name = "Fantasy",
-					Url="fantasy",
-					Icon="fantasy"
-				},
-				new Category()
-				{
-					Id=2,
-					Name = "Science Fiction",
-					Url="science-fiction",
-					Icon="science-fiction"
-				},
-				new Category()
-				{
-					Id=3,
-					Name = "Horror",
-					Url="horror",
-					Icon="horror"
-				}
-			};
+			_httpClient = httpClient;
+		}
+
+		public async Task LoadCategories()
+		{
+			Categories = await _httpClient.GetFromJsonAsync<List<Category>>("api/category")!;
 		}
 	}
 }
