@@ -1,38 +1,44 @@
+using BlazorApplication.Server.Services.CategoryService;
+using BlazorApplication.Server.Services.ProductService;
+
 namespace BlazorApplication.Server
 {
-	public class Program
-	{
-		public static void Main(string[] args)
-		{
-			WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-			_ = builder.Services.AddControllersWithViews();
-			_ = builder.Services.AddRazorPages();
+            _ = builder.Services.AddControllersWithViews();
+            _ = builder.Services.AddRazorPages();
 
-			using WebApplication app = builder.Build();
+            _ = builder.Services.AddScoped<IProductService, ProductService>();
+            _ = builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-			if (app.Environment.IsDevelopment())
-			{
-				app.UseWebAssemblyDebugging();
-			}
-			else
-			{
-				_ = app.UseExceptionHandler("/Error");
-				_ = app.UseHsts();
-			}
+            using WebApplication app = builder.Build();
 
-			_ = app.UseHttpsRedirection();
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseWebAssemblyDebugging();
+            }
+            else
+            {
+                _ = app.UseExceptionHandler("/Error");
+                _ = app.UseHsts();
+            }
 
-			_ = app.UseBlazorFrameworkFiles();
-			_ = app.UseStaticFiles();
+            _ = app.UseHttpsRedirection();
 
-			_ = app.UseRouting();
+            _ = app.UseBlazorFrameworkFiles();
+            _ = app.UseStaticFiles();
 
-			_ = app.MapRazorPages();
-			_ = app.MapControllers();
-			_ = app.MapFallbackToFile("index.html");
+            _ = app.UseRouting();
 
-			app.Run();
-		}
-	}
+            _ = app.MapRazorPages();
+            _ = app.MapControllers();
+            _ = app.MapFallbackToFile("index.html");
+
+            app.Run();
+        }
+    }
 }
