@@ -1,31 +1,35 @@
 ﻿@page "/"
 @page "/{categoryurl}"
 @using BlazorApplication.Client.Services.CategoryService;
+@using BlazorApplication.Client.Services.ProductService;
 @using BlazorApplication.Shared;
 @inject ICategoryService CategoryService
+@inject IProductService ProductService
 
 @if(category is not null)
 {
 	<h1>Welcome to the @category.Name section</h1>
-	<ProductList CategoryId = "@category.Id"/>
+	<ProductList />
 }
 else
 {
-	<h1>Welcome to the BalzorApplication</h1>
+	<h1>Welcome to the BlazorApplication</h1>
 	<ProductList />
 }
 
 @code {
 	[Parameter]
-	public string CategoryUrl { get; set; }
+	public string? CategoryUrl { get; set; }
 
 	private Category? category = null;
 
-	protected override void OnParametersSet()
+	protected override async Task OnParametersSetAsync()
 	{
+		await ProductService.LoadProducts(CategoryUrl);
+
 		if (CategoryUrl is not null)
 		{
-			category = CategoryService.Categories.FirstOrDefault(category => category.Url.ToLower() == CategoryUrl.ToLower());
+			category = CategoryService.Categories!.FirstOrDefault(category => category.Url.ToLower() == CategoryUrl.ToLower());
 		}
 		else
 		{
