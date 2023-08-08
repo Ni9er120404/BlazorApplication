@@ -1,44 +1,30 @@
-﻿using BlazorApplication.Shared;
+﻿using BlazorApplication.Server.Data;
+using BlazorApplication.Shared;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApplication.Server.Services.CategoryService
 {
 	public class CategoryService : ICategoryService
 	{
-		public List<Category> Categories { get; set; } = new()
+		private readonly Context _context;
+
+		public CategoryService(Context context)
 		{
-			new Category()
-				{
-					Id=1,
-					Name = "Fantasy",
-					Url="fantasy",
-					Icon="fantasy"
-				},
-				new Category()
-				{
-					Id=2,
-					Name = "Science Fiction",
-					Url="science-fiction",
-					Icon="science-fiction"
-				},
-				new Category()
-				{
-					Id=3,
-					Name = "Horror",
-					Url="horror",
-					Icon="horror"
-				}
-		};
+			_context = context;
+		}
 
 		public async Task<List<Category>> GetAllCategories()
 		{
-			return Categories;
+			var categories = await _context.Categories.ToListAsync();
+
+			return categories;
 		}
 
 		public async Task<Category> GetCategoryByUrl(string categoryUrl)
 		{
-			Category? category = Categories.FirstOrDefault(category => category.Url.ToLower() == categoryUrl.ToLower());
+			Category? category = await _context.Categories.FirstOrDefaultAsync(category => category.Url.ToLower() == categoryUrl.ToLower());
 
-			return category;
+			return category is null ? throw new Exception("Category not found") : category;
 		}
 	}
 }
