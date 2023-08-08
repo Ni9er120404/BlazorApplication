@@ -1,5 +1,7 @@
+using BlazorApplication.Server.Data;
 using BlazorApplication.Server.Services.CategoryService;
 using BlazorApplication.Server.Services.ProductService;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApplication.Server
 {
@@ -9,6 +11,9 @@ namespace BlazorApplication.Server
 		{
 			WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+			string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+			_ = builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
 			_ = builder.Services.AddControllersWithViews();
 			_ = builder.Services.AddRazorPages();
 
