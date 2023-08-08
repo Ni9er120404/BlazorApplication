@@ -1,43 +1,36 @@
-using Microsoft.AspNetCore.ResponseCompression;
-
-namespace BlazorApplication
+namespace BlazorApplication.Server
 {
 	public class Program
 	{
 		public static void Main(string[] args)
 		{
-			var builder = WebApplication.CreateBuilder(args);
+			WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
+			_ = builder.Services.AddControllersWithViews();
+			_ = builder.Services.AddRazorPages();
 
-			builder.Services.AddControllersWithViews();
-			builder.Services.AddRazorPages();
+			using WebApplication app = builder.Build();
 
-			var app = builder.Build();
-
-			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
 			{
 				app.UseWebAssemblyDebugging();
 			}
 			else
 			{
-				app.UseExceptionHandler("/Error");
-				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-				app.UseHsts();
+				_ = app.UseExceptionHandler("/Error");
+				_ = app.UseHsts();
 			}
 
-			app.UseHttpsRedirection();
+			_ = app.UseHttpsRedirection();
 
-			app.UseBlazorFrameworkFiles();
-			app.UseStaticFiles();
+			_ = app.UseBlazorFrameworkFiles();
+			_ = app.UseStaticFiles();
 
-			app.UseRouting();
+			_ = app.UseRouting();
 
-
-			app.MapRazorPages();
-			app.MapControllers();
-			app.MapFallbackToFile("index.html");
+			_ = app.MapRazorPages();
+			_ = app.MapControllers();
+			_ = app.MapFallbackToFile("index.html");
 
 			app.Run();
 		}
