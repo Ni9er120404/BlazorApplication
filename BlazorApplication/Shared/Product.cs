@@ -8,22 +8,20 @@
 
         public string? Description { get; set; }
 
-        public string? Image { get; set; }
-
-        public decimal Price { get; set; }
-
-        public decimal OriginalPrice { get; set; }
+        public string Image { get; set; } = "https://via.placeholder.com/300x300";
 
         public bool IsPublic { get; set; }
 
         public bool IsDeleted { get; set; }
 
-        public int CategoryId { get; set; }
-
         public Category? Category { get; set; }
 
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public int CategoryId { get; set; }
 
-        public DateTime UpdatedDate { get; set; } = DateTime.Now;
+        public List<ProductVariant> Variants { get; set; } = new List<ProductVariant>();
+
+        public DateTime? DateCreated { get; set; } = DateTime.Now;
+
+        public DateTime? DateUpdated { get; set; }
     }
 }

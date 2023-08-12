@@ -4,23 +4,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorApplication.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CategoryController : ControllerBase
-    {
-        private readonly ICategoryService _categoryService;
+	[Route("api/[controller]")]
+	[ApiController]
+	public class CategoryController : ControllerBase
+	{
+		private readonly ICategoryService _categoryService;
 
-        public CategoryController(ICategoryService categoryService)
-        {
-            _categoryService = categoryService;
-        }
+		public CategoryController(ICategoryService categoryService)
+		{
+			_categoryService = categoryService;
+		}
 
-        [HttpGet]
-        public async Task<ActionResult<List<Category>>> GetCategories()
-        {
-            var categories = await _categoryService.GetAllCategories();
+		[HttpGet]
+		public async Task<ActionResult<List<Category>>> GetCategories()
+		{
+			List<Category> categories = await _categoryService.GetAllCategories();
 
-            return Ok(categories);
-        }
-    }
+			return Ok(categories);
+		}
+	}
 }

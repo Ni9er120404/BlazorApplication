@@ -15,7 +15,7 @@ namespace BlazorApplication.Server.Services.CategoryService
 
 		public async Task<List<Category>> GetAllCategories()
 		{
-			var categories = await _context.Categories.ToListAsync();
+			List<Category> categories = await _context.Categories.ToListAsync();
 
 			return categories;
 		}
