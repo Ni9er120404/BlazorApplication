@@ -1,32 +1,56 @@
 ﻿@page "/product/{id:int}"
-@using BlazorApplication.Client.Services.ProductService;
-@using BlazorApplication.Shared;
+@using BlazorApplication.Client.Services.ProductService
+@using BlazorApplication.Shared
 @inject IProductService ProductService
 
-<div class="media">
-	<div class="media-img-big-wrapper mr-2">
-		<img class="media-img-big" src="@product!.Image" alt="@product!.Title"/>
-	</div>
-	<div class="media-body">
-		<h2 class="mb-0">@product.Title</h2>
-		<p>@product.Description</p>
-		@if(product.OriginalPrice > product.Price)
-		{
-			<h6 class="text-muted original-price">$@product.OriginalPrice</h6>
-		}
-		<h4 class="price">$@product.Price</h4>
-		<button class="btn btn-primary"><i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;Add to Cart</button>
-	</div>
+<div class="product-container">
+    <div class="product-image">
+        <img class="img-fluid" src="@product.Image" alt="@product.Title" />
+    </div>
+    <div class="product-details">
+        <h2 class="product-title">@product.Title</h2>
+        <p class="product-description">@product.Description</p>
+        @if (product.Variants is not null && product.Variants.Count > 0)
+        {
+            <div class="form-group">
+                <select class="form-control" @bind="currentEditionId">
+                    @foreach (var productVariant in product.Variants)
+                    {
+                        <option value="@productVariant.EditionId">@productVariant.Edition.Name</option>
+                    }
+                </select>
+            </div>
+        }
+        @if (selectedVariant is not null)
+        {
+            <div class="price-container">
+                @if (selectedVariant.OriginalPrice > selectedVariant.Price)
+                {
+                    <h6 class="text-muted original-price">$@selectedVariant.OriginalPrice</h6>
+                }
+                <h4 class="price">$@selectedVariant.Price</h4>
+            </div>
+        }
+        <button class="btn btn-primary btn-add-to-cart"><i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;Add to Cart</button>
+    </div>
 </div>
 
 @code {
-	private Product? product = new();
+    private Product product = new Product();
+    private int currentEditionId;
 
-	[Parameter]
-	public int Id { get; set; }
+    private ProductVariant selectedVariant => product.Variants?.FirstOrDefault(v => v.EditionId == currentEditionId);
 
-	protected override async Task OnInitializedAsync()
-	{
-		product = await ProductService.GetProduct(Id);
-	}
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        product = await ProductService.GetProduct(Id);
+
+        if (product.Variants?.Count > 0)
+        {
+            currentEditionId = product.Variants[0].EditionId;
+        }
+    }
 }
