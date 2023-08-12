@@ -19,7 +19,7 @@ namespace BlazorApplication.Client.Services.ProductService
 
 		public async Task<Product> GetProduct(int id)
 		{
-			Product? product = await _httpClient.GetFromJsonAsync<Product>($"api/Product/{id}");
+			Product? product = await _httpClient.GetFromJsonAsync<Product>($"api/{nameof(Product)}/{id}");
 
 			return product is null ? throw new Exception($"Product with id {id} not found") : product;
 		}
@@ -28,11 +28,11 @@ namespace BlazorApplication.Client.Services.ProductService
 		{
 			if (categoryUrl is null)
 			{
-				Products = await _httpClient.GetFromJsonAsync<List<Product>>("api/Product");
+				Products = await _httpClient.GetFromJsonAsync<List<Product>>($"api/{nameof(Product)}");
 			}
 			else
 			{
-				Products = await _httpClient.GetFromJsonAsync<List<Product>>($"api/Product/Category/{categoryUrl}");
+				Products = await _httpClient.GetFromJsonAsync<List<Product>>($"api/{nameof(Product)}/{nameof(Category)}/{categoryUrl}");
 			}
 
 			OnChange!.Invoke();
